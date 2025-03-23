@@ -1,22 +1,27 @@
 import subprocess
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
 
 def run_script(name, script_path):
-    print(f"🚀 Running {name} ...")
+    logging.info(f"Running {name} ...")
     result = subprocess.run(["python", script_path], capture_output=True, text=True)
-    print(result.stdout)
+
+    if result.stdout:
+        logging.info(f"{name} Output:\n{result.stdout.strip()}")
     if result.stderr:
-        print(f"⚠️ Errors while running {name}:\n{result.stderr}")
+        logging.error(f"{name} Errors:\n{result.stderr.strip()}")
 
 def main():
-    print("🧠 Starting daily news pipeline...")
+    logging.info("Starting daily news pipeline...")
 
-    # Step 1: Scrape fresh articles
     run_script("Scraper", "scraper.py")
-
-    # Step 2: Cluster news articles
     run_script("Clustering", "clustering.py")
 
-    print("✅ Pipeline completed. articles_clustered.json is ready!")
+    logging.info("Pipeline completed. articles_clustered.json is ready!")
 
 if __name__ == "__main__":
     main()
