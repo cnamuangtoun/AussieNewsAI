@@ -2,6 +2,10 @@
 
 **AussieNewsAI** is an intelligent news aggregation and analysis platform tailored for Australian media. It scrapes news from major Australian outlets, classifies them using NLP, clusters similar articles, and presents them in a clean Streamlit dashboard. Users can interact with a chatbot to ask questions about the day’s top stories using Retrieval-Augmented Generation (RAG).
 
+## 🌐 Live App
+
+**[👉 Try the app on Streamlit](https://aussienewsai-6wvvp7yylgaabbyxyguef8.streamlit.app/)**
+
 ---
 
 ## Features
