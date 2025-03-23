@@ -3,7 +3,7 @@ import streamlit as st
 from collections import defaultdict
 
 # Load clustered articles
-with open("articles_clustered.json", "r") as f:
+with open("data/articles_clustered.json", "r") as f:
     articles = json.load(f)
 
 # Group articles by cluster ID
