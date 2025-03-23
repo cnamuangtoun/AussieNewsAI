@@ -4,3 +4,4 @@ transformers==4.50.0
 torch==2.6.0
 sentence-transformers==3.4.1
 faiss-cpu==1.10.0
+lxml_html_clean==0.4.1
