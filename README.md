@@ -11,7 +11,7 @@
 - **Semantic Clustering** using Sentence-BERT and cosine similarity
 - **Interactive News Dashboard** with category filtering and frequency-based highlights
 - **Chatbot (RAG)** powered by OpenAI’s GPT-4
-- ⏱**Automated Pipeline** with GitHub Actions to refresh news daily
+- **Automated Pipeline** with GitHub Actions to refresh news daily
 
 ---
 
