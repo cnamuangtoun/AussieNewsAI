@@ -1,7 +1,14 @@
 import json
 import feedparser
+import logging
 from newspaper import Article, Config, build
 from transformers import pipeline
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
 
 # Set up user agent to avoid 403 errors when scraping
 user_agent = "Chrome/115.0.0.0"
@@ -58,7 +65,7 @@ def build_source_categories():
             paper = build(base_url, memoize_articles=False)
             source_categories[source] = paper.category_urls()
         except Exception as e:
-            print(f"Error building newspaper for {source}: {e}")
+            logging.warning(f"Error building newspaper for {source}: {e}")
             source_categories[source] = []
     return source_categories
 
@@ -106,16 +113,16 @@ def main():
     all_articles = []
 
     for source, rss_url in RSS_FEEDS.items():
-        print(f"\nFetching articles from {source}...")
+        logging.info(f"Fetching articles from {source}...")
         try:
             articles_info = fetch_rss_articles(rss_url)
         except Exception as e:
-            print(f"Error fetching RSS feed from {source}: {e}")
+            logging.error(f"Error fetching RSS feed from {source}: {e}")
             continue
 
         for info in articles_info:
             try:
-                print(f"Processing: {info['url']}")
+                logging.info(f"Processing: {info['url']}")
                 article = extract_article_details(info)
                 article["source"] = source
 
@@ -144,12 +151,12 @@ def main():
                     all_articles.append(article)
 
             except Exception as e:
-                print(f"Error processing {info['url']}: {e}")
+                logging.warning(f"Error processing article: {e}")
     
     with open("data/articles.json", "w") as outfile:
         json.dump(all_articles, outfile, indent=4)
 
-    print("Extraction complete. Articles saved to data/articles.json.")
+    logging.info(f"Extraction complete. {len(all_articles)} articles saved to data/articles.json.")
 
 if __name__ == "__main__":
     main()
