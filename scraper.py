@@ -20,12 +20,16 @@ model_name = "dstefa/roberta-base_topic_classification_nyt_news"
 classifier = pipeline("text-classification", model=model_name, tokenizer=model_name)
 
 def classify_article(text):
+    """
+    Classify article text using the fine-tuned RoBERTa topic classification model.
+    Map the predicted label into one of the four allowed groups. If it doesn't match, return "other news".
+    """
     result = classifier(text, truncation=True)
     pred_label = result[0]["label"]
     
     mapping = {
         "Sports": "sports",
-        "Arts, Culture, and Entertainment": "music",
+        "Arts, Culture, and Entertainment": "entertainment",
         "Business and Finance": "finance",
         "Health and Wellness": "lifestyle",
         "Lifestyle and Fashion": "lifestyle",
@@ -35,11 +39,13 @@ def classify_article(text):
     }
     
     mapped = mapping.get(pred_label, "other news")
-    allowed = {"sports", "lifestyle", "music", "finance"}
+    allowed = {"sports", "lifestyle", "entertainment", "finance"}
     return mapped if mapped in allowed else "other news"
 
-allowed_labels = {"sports", "lifestyle", "music", "finance"}
+# Define allowed labels for our final output
+allowed_labels = {"sports", "lifestyle", "entertainment", "finance"}
 
+# Map each source to its base URL (used to build category URLs)
 base_urls = {
     "9News": "http://www.9news.com.au",
     "ABC": "https://www.abc.net.au",
@@ -49,6 +55,7 @@ base_urls = {
     "Yahoo": "https://au.news.yahoo.com",
 }
 
+# RSS feed URLs for the sources
 RSS_FEEDS = {
     "9News": "http://www.9news.com.au/rss",
     "ABC": "https://www.abc.net.au/news/feed/51120/rss.xml",
@@ -79,8 +86,8 @@ def infer_category_from_url(article_url, source, source_categories):
                 return "lifestyle"
             elif "business" in cat_url.lower() or "finance" in cat_url.lower():
                 return "finance"
-            elif "music" in cat_url.lower():
-                return "music"
+            elif "music" in cat_url.lower() or "entertainment" in cat_url.lower():
+                return "entertainment"
     return "other news"
 
 def fetch_rss_articles(rss_url):
