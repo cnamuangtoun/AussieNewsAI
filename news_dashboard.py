@@ -1,6 +1,8 @@
 import json
+import os
 import streamlit as st
 from collections import defaultdict
+from chatbot.rag_chat import generate_answer
 
 # Load clustered articles
 with open("data/articles_clustered.json", "r") as f:
@@ -46,9 +48,11 @@ for category in grouped_by_category:
 st.set_page_config(page_title="News Highlights Dashboard", layout="wide")
 st.title("🗞️ News Highlights Dashboard")
 
+# Sidebar: Category Selector
 categories = sorted(grouped_by_category.keys())
 selected_category = st.sidebar.selectbox("Select a category", categories)
 
+# Main: Article Highlights
 st.header(f"Top News in **{selected_category.capitalize()}**")
 
 for article in grouped_by_category[selected_category]:
@@ -71,3 +75,15 @@ for article in grouped_by_category[selected_category]:
             st.markdown(f"- [{source}]({url}) — _Unknown author • Unknown date_")
 
     st.markdown("---")
+
+# === Sidebar Chatbot ===
+st.sidebar.markdown("---")
+st.sidebar.subheader("Ask the NewsBot")
+
+user_query = st.sidebar.text_input("What do you want to know?", key="chatbox")
+
+if user_query:
+    with st.spinner("Thinking..."):
+        response = generate_answer(user_query)
+        st.sidebar.markdown("**Response:**")
+        st.sidebar.write(response)
